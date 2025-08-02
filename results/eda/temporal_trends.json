@@ -1,0 +1,16 @@
+{
+  "pm10": {
+    "slope": -3.1822863391091563,
+    "r_squared": 0.6985781435462544,
+    "p_value": 0.0001040778432309369,
+    "trend": "Disminuyendo",
+    "significance": "Significativa"
+  },
+  "no2": {
+    "slope": -0.4807971128887723,
+    "r_squared": 0.2410022438698153,
+    "p_value": 0.07466637752282478,
+    "trend": "Disminuyendo",
+    "significance": "No significativa"
+  }
+}

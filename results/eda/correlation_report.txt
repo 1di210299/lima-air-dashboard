@@ -1,0 +1,34 @@
+
+================================================================================
+REPORTE DE ANÁLISIS DE CORRELACIONES
+Dashboard de Calidad del Aire - Lima
+================================================================================
+
+Contaminantes analizados: 2
+Variables: PM10, NO2
+
+CORRELACIONES MÁS FUERTES:
+----------------------------------------
+1. PM10 vs NO2: 0.215
+
+ANÁLISIS DE GRUPOS:
+----------------------------------------
+No se encontraron correlaciones altas (>0.7)
+
+ESTADÍSTICAS DESCRIPTIVAS:
+----------------------------------------
+Correlación promedio: 0.215
+Correlación mínima: 0.215
+Correlación máxima: 0.215
+Desviación estándar: 0.000
+
+CORRELACIONES CON CARACTERÍSTICAS:
+----------------------------------------
+Top 5 correlaciones contaminante-característica:
+1. PM10 vs longitude: 0.419
+2. PM10 vs year: -0.279
+3. NO2 vs is_dry_season: 0.221
+4. NO2 vs latitude: 0.140
+5. NO2 vs year: -0.137
+
+================================================================================

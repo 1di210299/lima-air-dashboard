@@ -1,0 +1,293 @@
+# Lima Air Dashboard - .gitignore
+
+# Environment variables and secrets
+.env
+.env.local
+.env.production
+.env.staging
+*.key
+*.pem
+secrets/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+.ENV/
+conda_env/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Node.js and React (Frontend)
+lima-air-dashboard-frontend/node_modules/
+lima-air-dashboard-frontend/build/
+lima-air-dashboard-frontend/.env
+lima-air-dashboard-frontend/.env.local
+lima-air-dashboard-frontend/.env.development.local
+lima-air-dashboard-frontend/.env.test.local
+lima-air-dashboard-frontend/.env.production.local
+lima-air-dashboard-frontend/npm-debug.log*
+lima-air-dashboard-frontend/yarn-debug.log*
+lima-air-dashboard-frontend/yarn-error.log*
+lima-air-dashboard-frontend/.pnpm-debug.log*
+lima-air-dashboard-frontend/lerna-debug.log*
+lima-air-dashboard-frontend/.npm
+lima-air-dashboard-frontend/.eslintcache
+
+# Frontend distribution and production builds
+lima-air-dashboard-frontend/dist/
+lima-air-dashboard-frontend/build/
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Gatsby files
+.cache/
+public
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# Temporary folders
+tmp/
+temp/
+
+# Data files - Ignore ALL data directory contents by default
+data/*
+
+# Only keep essential data files (uncomment what you want to keep)
+# !data/README.md
+# !data/.gitkeep
+# !data/sample_data.csv
+
+# Always ignore these data file patterns
+*.csv.bak
+*.csv.tmp
+*.xlsx.bak
+*.json.bak
+data/temp/
+data/raw/large_*
+data/processed/temp_*
+data/*_backup.*
+data/*_old.*
+data/*_temp.*
+data/*_analysis_*.csv
+data/temp_*
+data/downloads/
+data/cache/
+data/processed/
+data/raw/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+db_backups/
+
+# Logs
+logs/
+*.log
+log/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary analysis files
+analysis_temp/
+*_analysis.py
+*_temp.py
+*_test.py
+scratch/
+
+# Model files (can be large)
+models/*.pkl
+models/*.joblib
+models/*.h5
+models/checkpoints/
+
+# Machine Learning outputs
+results/plots/*.png
+results/plots/*.jpg
+results/plots/*.pdf
+results/reports/*_temp.*
+results/dashboards/*_temp.*
+
+# API keys and credentials
+api_keys.txt
+credentials.json
+token.txt
+
+# Docker
+.dockerignore
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Documentation drafts
+docs/drafts/
+*_draft.md
+*_temp.md
+
+# System files
+*.tmp
+*.swp
+*.swo
+*~
+
+# ZIP and compressed files (except required ones)
+*.zip
+*.tar.gz
+*.rar
+!required_data.zip
+
+# Cache directories
+.cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Flask/FastAPI specific
+instance/
+.webassets-cache
+
+# PostgreSQL
+*.pgpass
+pg_hba.conf
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# Bower dependency directory (https://bower.io/)
+bower_components
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons (https://nodejs.org/api/addons.html)
+build/Release
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Snowpack dependency directory (https://snowpack.dev/)
+web_modules/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

@@ -1,1 +1,194 @@
-hella
+Fase 1: Ingesta y almacenamiento de datos
+Descarga automática de CSV de calidad del aire
+
+Programa un script en Python que cada hora baje el ZIP/CSV desde el portal de Datos Abiertos (por ejemplo, con requests o directamente montando un cron que copie la URL).
+
+Descomprime y guarda los archivos en un bucket S3 (AWS) o en un directorio local estructurado por fecha.
+
+Base de datos
+
+Diseña una tabla en PostgreSQL (o SQLite para prototipo) con columnas: station_id, district, timestamp, pm25, pm10, no2.
+
+Cada vez que ingrese un nuevo CSV, un proceso ETL en Python (usando pandas.to_sql) inserta solo los registros nuevos (evitando duplicados).
+
+Entregable: Tablas pobladas con datos limpios y normalizados actualizados cada hora.
+
+Fase 2: Preprocesamiento y limpieza
+Validación y limpieza de datos
+
+Elimina o imputa valores faltantes (df.dropna en contaminantes críticos).
+
+Filtra lecturas fuera de rango (p. ej. pm25 < 0 o demasiado altas por error).
+
+Agrega columnas derivadas: hora del día, día de la semana, estación seca/lluviosa.
+
+Aggregación para modelado
+
+Produce series de tiempo por estación y por distrito (agrupadas por hora o por día):
+
+python
+Copy
+Edit
+df_grouped = df.groupby(["district", pd.Grouper(key="timestamp", freq="H")]).mean().reset_index()
+Guarda estas series como tablas auxiliares (air_timeseries) para alimentar al modelo.
+
+Entregable: Dataset de series temporales listo para entrenamiento.
+
+Fase 3: Modelado y pronóstico (Prophet / LSTM)
+Experimentación con Prophet
+
+Por cada distrito, entrena un modelo Prophet (Facebook/Meta) que prediga las próximas 24–48 h de PM2.5.
+
+Ajusta estacionalidades (diaria, semanal) y vacaciones (festivos locales).
+
+Evalúa con backtesting (métricas MAE/RMSE).
+
+Prototipo LSTM (opcional para mayor precisión)
+
+Prepara ventanas de secuencia (p. ej. 48 horas de histórico para predecir la siguiente hora).
+
+Construye y entrena una red LSTM con TensorFlow o PyTorch.
+
+Compara desempeño vs. Prophet y selecciona el mejor.
+
+Servicio de inferencia
+
+Empaqueta tu modelo seleccionado en un servicio REST con FastAPI o Flask, que reciba un distrito y devuelva el pronóstico.
+
+Entregable: Endpoint /predict?district=XXX que retorna JSON con tiempos y valores estimados.
+
+Fase 4: Backend y API
+Diseño de API REST
+
+Endpoints principales:
+
+GET /current?district=XXX → última medición real + status (Bueno/Regular/Malo).
+
+GET /forecast?district=XXX → pronóstico 48 h.
+
+GET /risk?district=XXX&age=YY&condition=ZZ → puntaje de riesgo de correr.
+
+Cálculo de “riesgo de correr”
+
+Define una fórmula simple que combine valor de PM2.5 pronosticado, edad y condición preexistente:
+
+ini
+Copy
+Edit
+risk_score = α·pm25_forecast + β·(age/100) + γ·condition_factor
+Mapéalo a categorías (Bajo/Medio/Alto/Extremo).
+
+Implementa esa lógica en un módulo Python y exponerlo en /risk.
+
+Autenticación y seguridad
+
+Si el servicio será privado, añade un mecanismo de API Key (token en cabecera).
+
+Entregable: API documentada (Swagger/OpenAPI) lista para el frontend.
+
+Fase 5: Dashboard web
+Elección de framework
+
+Streamlit para prototipo rápido:
+
+Mostrar mapa de Lima con colores por distrito (usando PyDeck o Folium).
+
+Panel lateral para elegir distrito, edad y condición.
+
+Gráficas de líneas para real vs. pronóstico (Plotly).
+
+Dash o React + Leaflet si requieres mayor control.
+
+Componentes clave
+
+Mapa interactivo: capas de heatmap basadas en valores de PM2.5 actuales y pronosticados.
+
+Gráficos de series: última semana y pronóstico futuro.
+
+Widget de riesgo: selector de edad/condición y alerta del “riesgo de correr”.
+
+Historial de alertas: tabla que muestre las notificaciones enviadas.
+
+Integración con API
+
+El frontend consulta los endpoints para traer datos actualizados cada X minutos.
+
+Entregable: Dashboard funcional desplegado en un servidor (Heroku, Vercel o similar).
+
+Fase 6: Sistema de notificaciones
+Eligir canal
+
+WhatsApp/SMS con Twilio o bot de Telegram.
+
+Configuración de Twilio (SMS/WhatsApp)
+
+Registra tu número de Twilio y obtén credenciales (Account SID, Auth Token).
+
+Implementa un módulo Python que use el SDK de Twilio para enviar mensajes:
+
+python
+Copy
+Edit
+from twilio.rest import Client
+client = Client(sid, token)
+client.messages.create(
+    to=USER_PHONE, 
+    from_="whatsapp:+1415XXXXXX", 
+    body=mensaje
+)
+Reglas de alerta
+
+Cada hora, tras actualizar datos y pronóstico, revisa si PM2.5 forecast > umbral (ej. 100 µg/m³).
+
+Si supera y el usuario está suscrito, envía alerta con texto personalizado y link al dashboard.
+
+Geolocalización de alertas
+
+Asocia a cada usuario uno o más distritos de interés.
+
+Envía alertas solo cuando su distrito exceda el umbral.
+
+Gestión de suscriptores
+
+Base de datos de usuarios con phone, district, age, condition.
+
+Endpoints para:
+
+POST /subscribe
+
+POST /unsubscribe
+
+Entregable: Servicio programado (cron o scheduler interno) que envía notificaciones según reglas y mantiene historial.
+
+Fase 7: Despliegue y monitoreo
+Contenedorización
+
+Empaqueta API y dashboard en contenedores Docker.
+
+Infraestructura
+
+Despliega en un servicio cloud (DigitalOcean, AWS ECS/Fargate, Heroku).
+
+Asigna dominio (ej. airelima.tuapp.com) y activa HTTPS.
+
+Monitoreo y logs
+
+Configura Prometheus + Grafana o CloudWatch para métricas de uso y errores.
+
+Lleva control de volumen de datos, tiempo de respuesta de endpoints y tasa de alertas enviadas.
+
+Pruebas y validación
+
+Realiza pruebas de carga moderada (usuarios simultáneos).
+
+Validación de alertas a un grupo control (revisa que no saturen y que sean oportunas).
+
+Iteración
+
+Recoge feedback de usuarios (ej. gimnasios, runners).
+
+Ajusta umbrales, mensajes y experiencia del dashboard según necesidades.
+
+
+
+tengo que hacer esto mi dat esta aca /Users/juandiegogutierrezcortez/lima-air-dashboard/data/data.csv

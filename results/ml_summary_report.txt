@@ -1,0 +1,78 @@
+
+================================================================================
+RESUMEN COMPLETO - FASE 3: MODELADO Y PREDICCIÓN ML
+Fecha: 2025-08-02 12:36:10
+================================================================================
+
+🤖 MODELOS DE REGRESIÓN (Predicción de Contaminantes)
+------------------------------------------------------------
+
+PM10:
+  Mejor Modelo: Gradient Boosting
+  R² Score: 0.6874
+  Top 3 Modelos:
+    1. Gradient Boosting: R² = 0.6874
+    2. LightGBM: R² = 0.6810
+    3. Random Forest: R² = 0.6675
+
+NO2:
+  Mejor Modelo: Random Forest
+  R² Score: 0.6523
+  Top 3 Modelos:
+    1. Random Forest: R² = 0.6523
+    2. LightGBM: R² = 0.5866
+    3. Gradient Boosting: R² = 0.5709
+
+🎯 MODELOS DE CLASIFICACIÓN (Calidad del Aire)
+------------------------------------------------------------
+
+PM10:
+  Mejor Modelo: Logistic Regression
+  Accuracy: 1.0000
+  Top 3 Modelos:
+    1. Logistic Regression: Accuracy = 1.0000
+    2. Random Forest: Accuracy = 1.0000
+    3. Gradient Boosting: Accuracy = 1.0000
+
+NO2:
+  Mejor Modelo: Logistic Regression
+  Accuracy: 1.0000
+  Top 3 Modelos:
+    1. Logistic Regression: Accuracy = 1.0000
+    2. Random Forest: Accuracy = 1.0000
+    3. Gradient Boosting: Accuracy = 1.0000
+
+📈 MODELOS DE SERIES TEMPORALES (Pronóstico)
+------------------------------------------------------------
+
+PM10:
+  Mejor Modelo: Moving Average
+  R² Score: 0.7587
+  Top 3 Modelos:
+    1. Moving Average: R² = 0.7587
+    2. Ridge Regression: R² = 0.7200
+    3. LSTM: R² = 0.7189
+
+NO2:
+  Mejor Modelo: Moving Average
+  R² Score: 0.8022
+  Top 3 Modelos:
+    1. Moving Average: R² = 0.8022
+    2. Ridge Regression: R² = 0.7751
+    3. GRU: R² = 0.7714
+
+📊 ESTADÍSTICAS GENERALES
+------------------------------------------------------------
+Total de modelos entrenados: 44
+Contaminantes analizados: 2
+Tipos de modelos: Regresión, Clasificación, Series Temporales
+
+🏆 MEJORES MODELOS POR CATEGORÍA
+------------------------------------------------------------
+Mejor Regresión: PM10 - Gradient Boosting (R² = 0.6874)
+Mejor Clasificación: PM10 - Logistic Regression (Acc = 1.0000)
+Mejor Pronóstico: NO2 - Moving Average (R² = 0.8022)
+
+================================================================================
+Todos los modelos y resultados han sido guardados en las carpetas 'models/' y 'results/'
+================================================================================
