@@ -1,194 +1,268 @@
-Fase 1: Ingesta y almacenamiento de datos
-Descarga automática de CSV de calidad del aire
+# Dashboard de Calidad del Aire - Lima
 
-Programa un script en Python que cada hora baje el ZIP/CSV desde el portal de Datos Abiertos (por ejemplo, con requests o directamente montando un cron que copie la URL).
+Sistema inteligente de monitoreo y predicción de contaminación ambiental en Lima Metropolitana
 
-Descomprime y guarda los archivos en un bucket S3 (AWS) o en un directorio local estructurado por fecha.
+## 📊 Estado del Proyecto
 
-Base de datos
+### ✅ COMPLETADAS
 
-Diseña una tabla en PostgreSQL (o SQLite para prototipo) con columnas: station_id, district, timestamp, pm25, pm10, no2.
+#### Fase 1: Ingesta y almacenamiento de datos ✅
 
-Cada vez que ingrese un nuevo CSV, un proceso ETL en Python (usando pandas.to_sql) inserta solo los registros nuevos (evitando duplicados).
+- ✅ Script de descarga automática desde portal SENAMHI
+- ✅ Base de datos SQLite con tablas normalizadas
+- ✅ Proceso ETL para inserción de nuevos registros sin duplicados
+- ✅ Ingesta horaria programada (68MB+ de datos históricos)
+- **Entregable**: Tablas pobladas con datos actualizados cada hora
 
-Entregable: Tablas pobladas con datos limpios y normalizados actualizados cada hora.
+#### Fase 2: Preprocesamiento y limpieza ✅
 
-Fase 2: Preprocesamiento y limpieza
-Validación y limpieza de datos
+- ✅ Validación y limpieza de datos (eliminación/imputación de faltantes)
+- ✅ Filtros de rango para lecturas anómalas
+- ✅ Columnas derivadas: hora, día de semana, estación climática
+- ✅ Series temporales agregadas por estación y distrito
+- ✅ Datasets de entrenamiento generados
+- **Entregable**: Dataset de series temporales listo para ML
 
-Elimina o imputa valores faltantes (df.dropna en contaminantes críticos).
+#### Fase 3: Modelado y pronóstico ✅
 
-Filtra lecturas fuera de rango (p. ej. pm25 < 0 o demasiado altas por error).
+- ✅ Modelos de regresión entrenados:
+  - PM10: Gradient Boosting (R² = 0.6874)
+  - NO2: Random Forest (R² = 0.6523)
+- ✅ Modelos de clasificación para calidad del aire
+- ✅ Modelos guardados y listos para inferencia
+- ✅ Evaluación con métricas MAE/RMSE
+- **Entregable**: Modelos ML entrenados y evaluados
 
-Agrega columnas derivadas: hora del día, día de la semana, estación seca/lluviosa.
+#### Fase 5: Dashboard web ✅
 
-Aggregación para modelado
+- ✅ Frontend React con TypeScript
+- ✅ Mapa interactivo con estaciones de monitoreo
+- ✅ Gráficos de series temporales
+- ✅ Widget de riesgo para corredores
+- ✅ Interfaz responsiva y moderna
+- **Entregable**: Dashboard funcional en React
 
-Produce series de tiempo por estación y por distrito (agrupadas por hora o por día):
+### 🚧 EN PROGRESO / PENDIENTES
 
-python
-Copy
-Edit
-df_grouped = df.groupby(["district", pd.Grouper(key="timestamp", freq="H")]).mean().reset_index()
-Guarda estas series como tablas auxiliares (air_timeseries) para alimentar al modelo.
+#### Fase 4: Backend y API 🔄
 
-Entregable: Dataset de series temporales listo para entrenamiento.
+- ⏳ **EN DESARROLLO**: API REST con FastAPI/Flask
+- ❌ Endpoints faltantes:
+  - `GET /current?district=XXX` → medición actual + status
+  - `GET /forecast?district=XXX` → pronóstico 48h
+  - `GET /risk?district=XXX&age=YY&condition=ZZ` → riesgo de correr
+- ❌ Cálculo de "riesgo de correr" personalizado
+- ❌ Documentación API (Swagger/OpenAPI)
+- **Prioridad**: ALTA - Necesario para conectar frontend con ML
 
-Fase 3: Modelado y pronóstico (Prophet / LSTM)
-Experimentación con Prophet
+#### Fase 6: Sistema de notificaciones ⚠️
 
-Por cada distrito, entrena un modelo Prophet (Facebook/Meta) que prediga las próximas 24–48 h de PM2.5.
+- ❌ **FALTA COMPLETAMENTE**
+- ❌ Integración con Twilio (WhatsApp/SMS)
+- ❌ Base de datos de suscriptores
+- ❌ Sistema de alertas automáticas
+- ❌ Endpoints POST /subscribe y /unsubscribe
+- ❌ Scheduler para envío de notificaciones
+- **Prioridad**: MEDIA - Valor agregado importante
 
-Ajusta estacionalidades (diaria, semanal) y vacaciones (festivos locales).
+#### Fase 7: Despliegue y monitoreo ⚠️
 
-Evalúa con backtesting (métricas MAE/RMSE).
+- ❌ Contenedorización con Docker
+- ❌ Despliegue en cloud (AWS/Heroku/DigitalOcean)
+- ❌ Dominio y HTTPS
+- ❌ Monitoreo y logs (Prometheus/Grafana)
+- **Prioridad**: BAJA - Para producción
 
-Prototipo LSTM (opcional para mayor precisión)
+---
 
-Prepara ventanas de secuencia (p. ej. 48 horas de histórico para predecir la siguiente hora).
+## 🎯 Oportunidades de Negocio Identificadas
 
-Construye y entrena una red LSTM con TensorFlow o PyTorch.
+### 1. **App de alertas y consejos personalizados**
 
-Compara desempeño vs. Prophet y selecciona el mejor.
+- ✅ Base técnica: Dashboard + modelos ML listos
+- 🔄 Falta: Sistema de notificaciones (Fase 6)
+- 💰 Monetización: Freemium, patrocinios de mascarillas/purificadores
 
-Servicio de inferencia
+### 2. **Pronóstico B2B con IA**
 
-Empaqueta tu modelo seleccionado en un servicio REST con FastAPI o Flask, que reciba un distrito y devuelva el pronóstico.
+- ✅ Modelos entrenados con R² > 0.65
+- 🔄 Falta: API empresarial
+- 💰 Target: Eventos, colegios, gimnasios
 
-Entregable: Endpoint /predict?district=XXX que retorna JSON con tiempos y valores estimados.
+### 3. **Panel BI ambiental**
 
-Fase 4: Backend y API
-Diseño de API REST
+- ✅ Dashboard interactivo funcional
+- 🔄 Falta: Personalización y white-label
+- 💰 Target: Gobiernos locales, consultoras
 
-Endpoints principales:
+### 4. **Chatbot de salud ambiental**
 
-GET /current?district=XXX → última medición real + status (Bueno/Regular/Malo).
+- ❌ Falta: Integración con LLM (OpenAI/Claude)
+- 💰 Target: Instituciones de salud, medios
 
-GET /forecast?district=XXX → pronóstico 48 h.
+### 5. **APIs "smart city"**
 
-GET /risk?district=XXX&age=YY&condition=ZZ → puntaje de riesgo de correr.
+- ✅ Datos procesados y modelos listos
+- 🔄 Falta: APIs RESTful documentadas
+- 💰 Target: Apps de movilidad, IoT, domótica
 
-Cálculo de “riesgo de correr”
+---
 
-Define una fórmula simple que combine valor de PM2.5 pronosticado, edad y condición preexistente:
+## 📊 Datos y Recursos
 
-ini
-Copy
-Edit
-risk_score = α·pm25_forecast + β·(age/100) + γ·condition_factor
-Mapéalo a categorías (Bajo/Medio/Alto/Extremo).
+### Fuente de Datos
 
-Implementa esa lógica en un módulo Python y exponerlo en /risk.
+- **SENAMHI** - Portal Nacional de Datos Abiertos
+- **Licencia**: Open Data Commons Attribution (100% pública)
+- **Volumen actual**: 68MB+ datos históricos
+- **Frecuencia**: Actualización horaria automática
 
-Autenticación y seguridad
+### Tecnologías Utilizadas
 
-Si el servicio será privado, añade un mecanismo de API Key (token en cabecera).
+- **Backend**: Python, pandas, SQLite, scikit-learn
+- **Frontend**: React, TypeScript, Leaflet, Chart.js
+- **ML**: Gradient Boosting, Random Forest, LightGBM
+- **Infraestructura**: Git, VS Code tasks
 
-Entregable: API documentada (Swagger/OpenAPI) lista para el frontend.
+---
 
-Fase 5: Dashboard web
-Elección de framework
+## 🚀 Próximos Pasos Priorizados
 
-Streamlit para prototipo rápido:
+### Inmediato (Esta semana)
 
-Mostrar mapa de Lima con colores por distrito (usando PyDeck o Folium).
+1. **Completar API REST** (Fase 4)
+   - Crear endpoints básicos con FastAPI
+   - Integrar modelos ML para predicciones
+   - Documentar con Swagger
 
-Panel lateral para elegir distrito, edad y condición.
+### Corto plazo (2-4 semanas)
 
-Gráficas de líneas para real vs. pronóstico (Plotly).
+2. **Sistema de notificaciones** (Fase 6)
+   - Configurar Twilio para WhatsApp/SMS
+   - Base de datos de usuarios
+   - Alertas automáticas por umbrales
 
-Dash o React + Leaflet si requieres mayor control.
+### Mediano plazo (1-3 meses)
 
-Componentes clave
+3. **Despliegue y monetización**
+   - Dockerizar y desplegar en cloud
+   - Implementar una idea de negocio piloto
+   - Validar con usuarios reales
 
-Mapa interactivo: capas de heatmap basadas en valores de PM2.5 actuales y pronosticados.
+---
 
-Gráficos de series: última semana y pronóstico futuro.
+## 💡 Análisis de Competencia
 
-Widget de riesgo: selector de edad/condición y alerta del “riesgo de correr”.
+### Plataformas Globales
 
-Historial de alertas: tabla que muestre las notificaciones enviadas.
+- **OpenAQ**: 231M+ mediciones, 65 países
+- **WAQI**: Mapa global en tiempo real
+- **BreezoMeter**: Adquirida por Google (2022)
 
-Integración con API
+### Oportunidad Local
 
-El frontend consulta los endpoints para traer datos actualizados cada X minutos.
+- **Respira Limpio**: App local, redujo exposición 76%
+- **Nuestro diferencial**:
+  - Datos 100% públicos (sin dependencias)
+  - ML predictivo personalizado
+  - Enfoque en runners/deportistas
+  - Alertas proactivas inteligentes
 
-Entregable: Dashboard funcional desplegado en un servidor (Heroku, Vercel o similar).
+---
 
-Fase 6: Sistema de notificaciones
-Eligir canal
+## 📈 Costos Estimados
 
-WhatsApp/SMS con Twilio o bot de Telegram.
+| Concepto | Costo Mensual | Observaciones |
+|----------|--------------|---------------|
+| **Hosting + BD** | < $50 USD | Datos livianos, tráfico moderado |
+| **API Conversacional** | $10-50 USD | ~1K consultas/mes (OpenAI) |
+| **Twilio (SMS/WhatsApp)** | $20-100 USD | Depende de volumen alertas |
+| **Dominio + SSL** | $10-20 USD | Anual |
+| **TOTAL** | **$90-220 USD** | Escalable según usuarios |
 
-Configuración de Twilio (SMS/WhatsApp)
+**ROI potencial**: Con 100 usuarios premium ($5/mes) = $500 USD/mes de ingresos.
 
-Registra tu número de Twilio y obtén credenciales (Account SID, Auth Token).
+---
 
-Implementa un módulo Python que use el SDK de Twilio para enviar mensajes:
+## 🏗️ Arquitectura del Sistema
 
-python
-Copy
-Edit
-from twilio.rest import Client
-client = Client(sid, token)
-client.messages.create(
-    to=USER_PHONE, 
-    from_="whatsapp:+1415XXXXXX", 
-    body=mensaje
-)
-Reglas de alerta
+### Estructura del Proyecto
 
-Cada hora, tras actualizar datos y pronóstico, revisa si PM2.5 forecast > umbral (ej. 100 µg/m³).
+```
+lima-air-dashboard/
+├── data/                           # 68MB+ datos históricos
+│   ├── data.csv                    # Dataset principal SENAMHI
+│   ├── lima_air_quality.db         # Base de datos SQLite
+│   └── aggregated/                 # Series temporales procesadas
+├── src/
+│   ├── data_ingestion/             # ✅ Descarga automática
+│   ├── preprocessing/              # ✅ Limpieza de datos
+│   ├── ml/                         # ✅ Modelos entrenados
+│   ├── database/                   # ✅ Conexión BD
+│   ├── api/                        # ❌ FALTA IMPLEMENTAR
+│   └── notifications/              # ❌ FALTA IMPLEMENTAR
+├── models/                         # ✅ Modelos ML guardados
+├── lima-air-dashboard-frontend/    # ✅ React Dashboard
+└── results/                        # ✅ Reportes y métricas
+```
 
-Si supera y el usuario está suscrito, envía alerta con texto personalizado y link al dashboard.
+### Flujo de Datos
 
-Geolocalización de alertas
+```mermaid
+graph TB
+    A[SENAMHI Portal] --> B[Data Ingestion]
+    B --> C[SQLite DB]
+    C --> D[Preprocessing]
+    D --> E[ML Models]
+    E --> F[API Endpoints]
+    F --> G[React Dashboard]
+    F --> H[Notifications]
+```
 
-Asocia a cada usuario uno o más distritos de interés.
+---
 
-Envía alertas solo cuando su distrito exceda el umbral.
+**Estado actual**: Proyecto técnicamente sólido en **Fase 4-5**, listo para monetización con completar API y notificaciones.
 
-Gestión de suscriptores
+**Ubicación de datos**: `/Users/juandiegogutierrezcortez/lima-air-dashboard/data/data.csv`
 
-Base de datos de usuarios con phone, district, age, condition.
+---
 
-Endpoints para:
+## 🔧 Cómo Ejecutar
 
-POST /subscribe
+### Prerrequisitos
 
-POST /unsubscribe
+- Python 3.11+
+- Node.js 18+
+- Git
 
-Entregable: Servicio programado (cron o scheduler interno) que envía notificaciones según reglas y mantiene historial.
+### Backend
 
-Fase 7: Despliegue y monitoreo
-Contenedorización
+```bash
+# Instalar dependencias
+pip install -r requirements.txt
 
-Empaqueta API y dashboard en contenedores Docker.
+# Ejecutar ingesta de datos
+python src/data_ingestion/downloader.py
 
-Infraestructura
+# Entrenar modelos (opcional, ya están entrenados)
+python scripts/fase3_ml_pipeline.py
+```
 
-Despliega en un servicio cloud (DigitalOcean, AWS ECS/Fargate, Heroku).
+### Frontend
 
-Asigna dominio (ej. airelima.tuapp.com) y activa HTTPS.
+```bash
+cd lima-air-dashboard-frontend
+npm install
+npm start
+```
 
-Monitoreo y logs
+### Tasks Disponibles
 
-Configura Prometheus + Grafana o CloudWatch para métricas de uso y errores.
+- **Ingesta de Datos - Horaria**: Descarga automática desde SENAMHI
+- **Start React Dashboard**: Servidor de desarrollo frontend
 
-Lleva control de volumen de datos, tiempo de respuesta de endpoints y tasa de alertas enviadas.
+---
 
-Pruebas y validación
+## 📝 Licencia
 
-Realiza pruebas de carga moderada (usuarios simultáneos).
-
-Validación de alertas a un grupo control (revisa que no saturen y que sean oportunas).
-
-Iteración
-
-Recoge feedback de usuarios (ej. gimnasios, runners).
-
-Ajusta umbrales, mensajes y experiencia del dashboard según necesidades.
-
-
-
-tengo que hacer esto mi dat esta aca /Users/juandiegogutierrezcortez/lima-air-dashboard/data/data.csv
+Este proyecto utiliza datos públicos de SENAMHI bajo licencia Open Data Commons Attribution.

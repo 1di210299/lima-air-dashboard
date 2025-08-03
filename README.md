@@ -19,31 +19,90 @@ Dashboard completo para el monitoreo de la calidad del aire en Lima, Perú. Sist
 - **Tasa de éxito**: 99.5% (207,589 insertados + 956 actualizados)
 - **Estaciones activas**: 4 estaciones registradas y funcionando
 
-### 🚀 Siguientes Fases:
-2. **Preprocesamiento y limpieza**
-3. **Modelado y predicción ML**
-4. **API Backend**
-5. **Dashboard Web**
-6. **Sistema de notificaciones**
-7. **Despliegue y producción**
+### ✅ Fase 2: Preprocesamiento y Limpieza (COMPLETADA)
+- **Pipeline de limpieza avanzada**: Implementado y funcionando
+- **Agregaciones temporales**: Series diarias, semanales y mensuales
+- **Features derivadas**: Variables de estacionalidad y tendencias
+- **Dataset de entrenamiento**: Listo para modelos ML
+- **Normalización para ML**: Datos preparados y escalados
+
+### ✅ Fase 3: Modelado y Predicción ML (COMPLETADA)
+- **Modelos de regresión entrenados**: 
+  - PM10: Gradient Boosting (R² = 0.6874)
+  - NO2: Random Forest (R² = 0.6523)
+- **Modelos de clasificación**: Calidad del aire por categorías
+- **Evaluación completa**: Métricas MAE/RMSE, gráficos de rendimiento
+- **Modelos guardados**: Listos para inferencia en producción
+- **Reportes generados**: Análisis completo en `/results/`
+
+### ✅ Fase 5: Dashboard Web (COMPLETADA)
+- **Frontend React + TypeScript**: Interfaz moderna y responsiva
+- **Componentes implementados**:
+  - `AirQualityMap.tsx`: Mapa interactivo con estaciones
+  - `TimeSeriesChart.tsx`: Gráficos de series temporales
+  - `RunningRiskWidget.tsx`: Widget de riesgo para corredores
+- **Integración de mapas**: Leaflet para visualización geográfica
+- **Diseño UX/UI**: Interfaz profesional y usable
+
+### 🚧 Fase 4: API Backend (EN DESARROLLO)
+- **Estado actual**: Estructura creada, endpoints pendientes
+- **Falta implementar**:
+  - `GET /current?district=XXX` → medición actual + status
+  - `GET /forecast?district=XXX` → pronóstico 48h
+  - `GET /risk?district=XXX&age=YY&condition=ZZ` → riesgo personalizado
+- **Modelos ML**: Listos para integración en API
+- **Documentación**: Swagger/OpenAPI pendiente
+
+### ⏳ Siguientes Fases Pendientes:
+6. **Sistema de notificaciones** (Twilio, WhatsApp, alertas)
+7. **Despliegue y producción** (Docker, cloud, monitoreo)
 
 ## 🏗️ Arquitectura del Sistema
 
 ```
 lima-air-dashboard/
 ├── src/
-│   ├── database/          # Modelos y conexiones de BD
-│   │   ├── models.py      # Esquemas SQLAlchemy
-│   │   └── connection.py  # Gestión de conexiones
-│   └── data_ingestion/    # Pipeline de ingesta
-│       ├── etl.py         # Procesamiento ETL
-│       └── downloader.py  # Descarga automática
+│   ├── database/          # ✅ Modelos y conexiones de BD
+│   │   ├── models.py      # ✅ Esquemas SQLAlchemy
+│   │   └── connection.py  # ✅ Gestión de conexiones
+│   ├── data_ingestion/    # ✅ Pipeline de ingesta
+│   │   ├── etl.py         # ✅ Procesamiento ETL
+│   │   └── downloader.py  # ✅ Descarga automática
+│   ├── preprocessing/     # ✅ Limpieza y transformación
+│   │   ├── data_cleaner.py    # ✅ Validación y limpieza
+│   │   ├── aggregators.py     # ✅ Series temporales
+│   │   └── feature_engineer.py # ✅ Variables derivadas
+│   ├── ml/               # ✅ Modelos de Machine Learning
+│   │   ├── pollution_predictor.py      # ✅ Regresión
+│   │   ├── air_quality_classifier.py  # ✅ Clasificación
+│   │   └── timeseries_forecaster.py   # ✅ Pronósticos
+│   ├── api/              # 🚧 API REST (En desarrollo)
+│   │   └── __init__.py   # ❌ Endpoints pendientes
+│   └── notifications/    # ❌ Sistema de alertas (Pendiente)
+├── lima-air-dashboard-frontend/  # ✅ Dashboard React
+│   ├── src/components/   # ✅ Componentes React
+│   │   ├── AirQualityMap.tsx      # ✅ Mapa interactivo
+│   │   ├── TimeSeriesChart.tsx    # ✅ Gráficos temporales
+│   │   └── RunningRiskWidget.tsx  # ✅ Widget de riesgo
+│   └── src/services/     # ✅ Servicios de datos
+├── models/               # ✅ Modelos ML entrenados
+│   ├── best_pm10_predictor.joblib    # ✅ Predicción PM10
+│   ├── best_no2_predictor.joblib     # ✅ Predicción NO2
+│   ├── best_pm10_classifier.joblib   # ✅ Clasificación PM10
+│   └── best_no2_classifier.joblib    # ✅ Clasificación NO2
+├── results/              # ✅ Reportes y métricas ML
+│   ├── ml_summary_report.txt         # ✅ Resumen modelos
+│   ├── *_results.png                 # ✅ Gráficos rendimiento
+│   └── eda/                          # ✅ Análisis exploratorio
+├── data/                 # ✅ Datasets procesados
+│   ├── lima_air_quality_complete.csv # ✅ Dataset principal (927K registros)
+│   ├── lima_air_quality_features.csv # ✅ Features para ML
+│   ├── lima_air_quality.db          # ✅ Base de datos SQLite
+│   └── aggregated/                   # ✅ Series temporales
 ├── config/
-│   └── settings.py        # Configuración del sistema
-├── data/
-│   └── lima_air_quality_complete.csv  # Dataset principal
-├── logs/                  # Logs del sistema
-└── requirements.txt       # Dependencias
+│   └── settings.py       # ✅ Configuración del sistema
+├── logs/                 # ✅ Logs del sistema
+└── requirements.txt      # ✅ Dependencias
 ```
 
 ## 🔧 Instalación y Configuración
@@ -148,17 +207,70 @@ Editar `config/settings.py` para ajustar:
 
 ## 📝 Próximos Pasos
 
-### Fase 2: Preprocesamiento (En desarrollo)
-- [ ] Pipeline de limpieza avanzada
-- [ ] Imputación de valores faltantes
-- [ ] Agregaciones temporales (diaria, semanal, mensual)
-- [ ] Features derivadas (estacionalidad, tendencias)
-- [ ] Normalización para ML
+### 🚧 Inmediato: Fase 4 - API Backend (En desarrollo activo)
 
-### Planificación Técnica
-1. **Análisis exploratorio**: Patrones estacionales y tendencias
-2. **Feature engineering**: Variables meteorológicas y temporales
-3. **Preparación para ML**: Datasets de entrenamiento y validación
+**Objetivo**: Conectar el frontend React con los modelos ML entrenados
+
+#### Tareas pendientes:
+- [ ] **FastAPI/Flask setup**: Crear servidor API REST
+- [ ] **Endpoint /current**: Mediciones actuales por distrito
+- [ ] **Endpoint /forecast**: Predicciones 48h usando modelos ML
+- [ ] **Endpoint /risk**: Cálculo de riesgo personalizado para corredores
+- [ ] **Documentación Swagger**: API documentation automática
+- [ ] **Middleware CORS**: Conexión con frontend React
+- [ ] **Autenticación**: API keys para acceso controlado
+
+#### Fórmula de riesgo a implementar:
+```python
+risk_score = α·pm25_forecast + β·(age/100) + γ·condition_factor
+# Mapear a categorías: Bajo/Medio/Alto/Extremo
+```
+
+### ⏳ Siguiente: Fase 6 - Sistema de Notificaciones
+
+#### Funcionalidades planificadas:
+- [ ] **Integración Twilio**: SMS y WhatsApp
+- [ ] **Base de datos suscriptores**: Gestión de usuarios
+- [ ] **Sistema de alertas**: Umbrales personalizables
+- [ ] **Endpoints de suscripción**: POST /subscribe, /unsubscribe
+- [ ] **Scheduler automático**: Envío de alertas horarias
+- [ ] **Geolocalización**: Alertas por distrito de interés
+
+### 🎯 Futuro: Fase 7 - Producción
+
+#### Despliegue y escalabilidad:
+- [ ] **Contenedorización**: Docker para API y frontend
+- [ ] **Cloud deployment**: AWS/Heroku/DigitalOcean
+- [ ] **CI/CD pipeline**: Automatización de despliegues
+- [ ] **Monitoreo**: Prometheus + Grafana
+- [ ] **Dominio personalizado**: HTTPS y SSL
+- [ ] **Load balancing**: Para alta disponibilidad
+
+## 🎯 Oportunidades de Monetización
+
+### Modelos de negocio listos para implementar:
+
+1. **SaaS para corredores/deportistas** 💰
+   - Base técnica: ✅ 95% completa
+   - Falta: API + notificaciones
+   - Revenue: $5-15/mes por usuario premium
+
+2. **API B2B para empresas** 💼
+   - Modelos ML: ✅ Entrenados y validados
+   - Falta: Documentación comercial
+   - Revenue: $100-500/mes por empresa
+
+3. **Dashboard white-label** 🏢
+   - Frontend: ✅ React profesional
+   - Falta: Personalización y multi-tenant
+   - Revenue: $1000-5000 implementación
+
+### Planificación Técnica Completada ✅
+
+- ✅ **Análisis exploratorio**: Patrones identificados en `/results/eda/`
+- ✅ **Feature engineering**: Variables meteorológicas y temporales
+- ✅ **ML Pipeline**: Datasets de entrenamiento optimizados
+- ✅ **Validación cruzada**: Modelos evaluados con métricas robustas
 
 ## 🤝 Contribución
 
@@ -176,4 +288,11 @@ Este proyecto está en desarrollo activo. Para contribuir:
 ---
 
 **Última actualización**: Agosto 2025  
-**Estado**: Fase 1 completada ✅ | Fase 2 en desarrollo 🚧
+**Estado actual**: 
+- ✅ **Fases 1, 2, 3, 5 completadas** (Ingesta + ML + Dashboard)
+- 🚧 **Fase 4 en desarrollo activo** (API REST)
+- ⏳ **Fases 6-7 planificadas** (Notificaciones + Despliegue)
+
+**Progreso total**: ~80% completado | **Listo para monetización** con API funcional
+
+**Próxima meta**: API REST funcional conectando React frontend con modelos ML
